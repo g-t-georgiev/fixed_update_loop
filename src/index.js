@@ -31,9 +31,9 @@
 ; (async () => {
 	// Import the MyGame module
 	const MyGame = (await import('./MyGame.js')).default;
-	const GameWorker = new Worker('../gameWorker.js', { type: 'module' });
+	// const GameWorker = new Worker('../gameWorker.js', { type: 'module' });
 
-	let isUpdating = false;
+	// let isUpdating = false;
 
 	// GameWorker.onmessage = function (e) {
 	// 	let data = e.data;
