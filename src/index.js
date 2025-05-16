@@ -98,14 +98,12 @@
 		if (numTicks > MAX_UPDATES_PER_FRAME) {
 			
 			stopMain(); // Stop the main loop to prevent excessive updates
-			
+			MyGame.reset(); // Reset the game state if too many updates are needed
+
 			// Optionally, you could also notify the user or log a message here
 			// For example, you could log a warning or error message
 			alert(`Too many updates (${numTicks}), game was pauased. Click ok to continue.`);
-
-			// numTicks = MAX_UPDATES_PER_FRAME;
-			// alert(`Too many updates (${numTicks}), clamping to ${MAX_UPDATES_PER_FRAME}.`);
-			MyGame.reset(); // Reset the game state if too many updates are needed
+			
 			startMain(); // Restart the main loop
 			return;
 		}
