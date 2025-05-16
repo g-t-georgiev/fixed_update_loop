@@ -22,5 +22,3 @@ self.onmessage = function (e) {
         self.postMessage({ type: 'updated', payload: { lastTick, updates } });
     }
 };
-
-export default self;
