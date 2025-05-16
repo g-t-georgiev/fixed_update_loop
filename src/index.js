@@ -29,9 +29,10 @@
  */
 
 ; (async () => {
-	// Import the MyGame module
-	const MyGame = (await import('./MyGame.js')).default;
-	// const GameWorker = new Worker('../gameWorker.js', { type: 'module' });
+	
+	const MAX_UPDATES_PER_FRAME = 5; // Or another reasonable value
+	const MyGame = (await import('./MyGame.js')).default; // Import the MyGame module
+	// const GameWorker = new Worker('../gameWorker.js', { type: 'module' }); // Create GameWorker instance
 
 	// let isUpdating = false;
 
@@ -54,7 +55,9 @@
 	// };
 
 	function main(tFrame) {
+
 		MyGame.stopMain = window.requestAnimationFrame(main);
+		
 		const nextTick = MyGame.lastTick + MyGame.tickLength;
 		let numTicks = 0;
 
@@ -81,15 +84,30 @@
 	// 	}
 	// });
 
-	main(performance.now()); // Start the cycle
+	startMain();
+
+	function startMain() {
+		MyGame.stopMain = window.requestAnimationFrame(main); // Start the cycle
+	}
+
+	function stopMain() {
+		window.cancelAnimationFrame(MyGame.stopMain);
+	}
 
 	function queueUpdates(numTicks) {
-
-		const MAX_UPDATES_PER_FRAME = 5; // Or another reasonable value
 		if (numTicks > MAX_UPDATES_PER_FRAME) {
-			console.warn(`Too many updates (${numTicks}), clamping to ${MAX_UPDATES_PER_FRAME}.`);
-			numTicks = MAX_UPDATES_PER_FRAME;
-			// Optionally, you could also reset state or notify the user here
+			
+			stopMain(); // Stop the main loop to prevent excessive updates
+			
+			// Optionally, you could also notify the user or log a message here
+			// For example, you could log a warning or error message
+			alert(`Too many updates (${numTicks}), game was pauased. Click ok to continue.`);
+
+			// numTicks = MAX_UPDATES_PER_FRAME;
+			// alert(`Too many updates (${numTicks}), clamping to ${MAX_UPDATES_PER_FRAME}.`);
+			MyGame.reset(); // Reset the game state if too many updates are needed
+			startMain(); // Restart the main loop
+			return;
 		}
 		
 		for (let i = 0; i < numTicks; i++) {
