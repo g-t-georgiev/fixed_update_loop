@@ -31,7 +31,7 @@
 ; (async () => {
 	// Import the MyGame module
 	const MyGame = (await import('./MyGame.js')).default;
-	const GameWorker = (await import('/GameWorker.js')).default;
+	const GameWorker = new Worker('../gameWorker.js', { type: 'module' });
 
 	function main(tFrame) {
 		MyGame.stopMain = window.requestAnimationFrame(main);
