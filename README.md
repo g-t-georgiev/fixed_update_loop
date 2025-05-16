@@ -5,14 +5,16 @@ This project implements a simple game loop using JavaScript. The game loop is re
 
 ## Project Structure
 ```
-main_loop
-├── src
-│   ├── index.js          # Main game loop implementation
-│   ├── myGame.js        # Defines the MyGame namespace and game state management
-│   └── utils
-│       └── helpers.js   # Utility functions for various tasks
-├── package.json          # npm configuration file
-└── README.md             # Project documentation
+main_loop/
+├── .gitignore
+├── README.md
+├── package.json
+├── src/
+│   ├── index.js
+│   ├── myGame.js
+│   └── utils/
+│       └── helpers.js
+├── gameWorker.js
 ```
 
 ## Setup Instructions
