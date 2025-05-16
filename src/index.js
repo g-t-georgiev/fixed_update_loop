@@ -31,6 +31,7 @@
 ; (async () => {
 	// Import the MyGame module
 	const MyGame = (await import('./MyGame.js')).default;
+	const GameWorker = (await import('./GameWorker.js')).default;
 
 	function main(tFrame) {
 		MyGame.stopMain = window.requestAnimationFrame(main);
@@ -59,6 +60,13 @@
 	}
 
 	MyGame.setInitialState();
+	GameWorker.postMessage({
+		type: 'init',
+		payload: {
+			lastTick: MyGame.lastTick,
+			tickLength: MyGame.tickLength
+		}
+	});
 	main(performance.now()); // Start the cycle
 })();
 // This is a self-invoking function that creates a new scope to avoid polluting the global namespace.
