@@ -33,6 +33,26 @@
 	const MyGame = (await import('./MyGame.js')).default;
 	const GameWorker = new Worker('../gameWorker.js', { type: 'module' });
 
+	let isUpdating = false;
+
+	// GameWorker.onmessage = function (e) {
+	// 	let data = e.data;
+	// 	let type = data.type;
+	// 	let payload = data.payload;
+	// 	if (type === 'updated') {
+	// 		MyGame.lastTick = payload.lastTick;
+	// 		// Call update for each tick
+	// 		if (payload.updates && Array.isArray(payload.updates)) {
+	// 			for (const update of payload.updates) {
+	// 				MyGame.update(update.tick);
+	// 			}
+	// 		} else {
+	// 			MyGame.update(MyGame.lastTick);
+	// 		}
+	// 		isUpdating = false;
+	// 	}
+	// };
+
 	function main(tFrame) {
 		MyGame.stopMain = window.requestAnimationFrame(main);
 		const nextTick = MyGame.lastTick + MyGame.tickLength;
@@ -52,21 +72,38 @@
 		MyGame.lastRender = tFrame;
 	}
 
+	MyGame.setInitialState();
+	// GameWorker.postMessage({
+	// 	type: 'init',
+	// 	payload: {
+	// 		lastTick: MyGame.lastTick,
+	// 		tickLength: MyGame.tickLength
+	// 	}
+	// });
+
+	main(performance.now()); // Start the cycle
+
 	function queueUpdates(numTicks) {
+
+		const MAX_UPDATES_PER_FRAME = 5; // Or another reasonable value
+		if (numTicks > MAX_UPDATES_PER_FRAME) {
+			console.warn(`Too many updates (${numTicks}), clamping to ${MAX_UPDATES_PER_FRAME}.`);
+			numTicks = MAX_UPDATES_PER_FRAME;
+			// Optionally, you could also reset state or notify the user here
+		}
+		
 		for (let i = 0; i < numTicks; i++) {
 			MyGame.lastTick += MyGame.tickLength; // Now lastTick is this tick.
 			MyGame.update(MyGame.lastTick);
 		}
-	}
 
-	MyGame.setInitialState();
-	GameWorker.postMessage({
-		type: 'init',
-		payload: {
-			lastTick: MyGame.lastTick,
-			tickLength: MyGame.tickLength
-		}
-	});
-	main(performance.now()); // Start the cycle
+		// if (numTicks > 0 && !isUpdating) {
+		// 	isUpdating = true;
+		// 	GameWorker.postMessage({
+		// 		type: 'update',
+		// 		payload: { numTicks }
+		// 	});
+		// }
+	}
 })();
 // This is a self-invoking function that creates a new scope to avoid polluting the global namespace.
