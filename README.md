@@ -1,7 +1,7 @@
 # Game Loop Project
 
 ## Overview
-This project implements a simple game loop using JavaScript. It utilizes a fixed timestep update approach. The game loop is responsible for updating the game state and rendering the game at a consistent frame rate. The project is structured to promote modularity and maintainability.
+This project implements a simple game loop using JavaScript. It utilizes a fixed timestep update approach (by default set at 20Hz refresh rate or 50ms delta time. The game loop is responsible for updating the game state and rendering the game at a consistent frame rate. The project is structured to promote modularity and maintainability.
 
 ## Project Structure
 ```
